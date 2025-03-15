@@ -7,11 +7,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Project2
+namespace Project2._Admin
 {
 
 
-    public partial class Welcome
+    public partial class Reports
     {
     }
 }

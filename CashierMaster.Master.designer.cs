@@ -11,7 +11,7 @@ namespace Project2
 {
 
 
-    public partial class ServeMaster
+    public partial class CashierMaster
     {
 
         /// <summary>

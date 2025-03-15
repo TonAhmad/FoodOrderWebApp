@@ -1,0 +1,36 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="CashierMaster.master.cs" Inherits="Project2.CashierMaster" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashier Panel</title>
+    <asp:ContentPlaceHolder ID="head" runat="server"></asp:ContentPlaceHolder>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="Design/CashierStyle.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <nav class="sidebar bg-dark text-white p-3">
+            <h2 class="text-center">Cashier Panel</h2>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a href="DashboardC.aspx" class="nav-link text-white">📊 Dashboard</a></li>
+                <li class="nav-item"><a href="ProcessPayment.aspx" class="nav-link text-white">💳 Proses Pembayaran</a></li>
+                <li class="nav-item"><a href="TransactionHistory.aspx" class="nav-link text-white">📜 Riwayat Transaksi</a></li>
+                <li class="nav-item"><a href="Logout.aspx" class="nav-link text-danger">🚪 Logout</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="content p-4">
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server"></asp:ContentPlaceHolder>
+        </div>
+    </div>
+</body>
+</html>

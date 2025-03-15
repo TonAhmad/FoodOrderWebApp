@@ -5,9 +5,9 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace Project2
+namespace Project2._Cashier
 {
-    public partial class Welcome : System.Web.UI.Page
+    public partial class Dashboard : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

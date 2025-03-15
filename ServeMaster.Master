@@ -4,17 +4,74 @@
 
 <html>
 <head runat="server">
-    <title></title>
+    <title>Food Haven</title>
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
-    <link href="P.Design\Style.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="Design\Style.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 <body>
-    <form id="form1" runat="server">
-        <div>
+    <div class="wrapper">
+        <header class="header">
+            <div class="container d-flex justify-content-between align-items-center">
+                <img src="Images/logo.png" alt="Logo" class="logo">
+                <h1 class="site-title">Food Haven</h1>
+            </div>
+        </header>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="index.aspx">🍔 Food Haven</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="Home.aspx">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="menu.aspx">Menu</a></li>
+                        <li class="nav-item"><a class="btn btn-warning" href="order.aspx">Order Sekarang</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="content">
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
             </asp:ContentPlaceHolder>
         </div>
-    </form>
+
+
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h3>Company</h3>
+                        <p>Company Name</p>
+                        <p>Address</p>
+                        <p>City, State, Zip</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Links</h3>
+                        <ul>
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Services</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>Follow Us</h3>
+                        <ul>
+                            <li><a href="#">Facebook</a></li>
+                            <li><a href="#">Twitter</a></li>
+                            <li><a href="#">Instagram</a></li>
+                            <li><a href="#">LinkedIn</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
 </body>
 </html>
