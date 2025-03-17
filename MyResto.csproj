@@ -101,6 +101,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\AddAdmin.cs" />
+    <Compile Include="Models\ImageUploader.cs" />
     <Compile Include="Models\Koneksi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServeMaster.Master.cs">
@@ -195,6 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="ProductImages\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
