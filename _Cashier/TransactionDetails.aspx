@@ -1,8 +1,8 @@
-﻿<%@ Page Title="Cashier Dashboard" Language="C#" MasterPageFile="~/CashierMaster.Master" AutoEventWireup="true" CodeBehind="DashboardC.aspx.cs" Inherits="Project2._Cashier.Dashboard" %>
+﻿<%@ Page Title="Transaction Details" Language="C#" MasterPageFile="~/CashierMaster.Master" AutoEventWireup="true" CodeBehind="TransactionDetails.aspx.cs" Inherits="Project2._Cashier.TransactionDetails" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
     <style>
-        .cashier-container {
+        .details-container {
             width: 80%;
             margin: auto;
             padding: 20px;
@@ -13,32 +13,25 @@
         .gridview-container {
             margin-top: 20px;
         }
-        .total-section {
-            margin-top: 20px;
-            text-align: right;
-        }
     </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-    <div class="cashier-container">
-        <h1>Cashier Dashboard</h1>
+    <div class="details-container">
+        <h1>Transaction Details</h1>
+        <h3>Transaction ID: <asp:Label ID="lblTransactionID" runat="server"></asp:Label></h3>
+        <h3>Date: <asp:Label ID="lblTransactionDate" runat="server"></asp:Label></h3>
+        <h3>Total Amount: <asp:Label ID="lblTotalAmount" runat="server"></asp:Label></h3>
 
         <div class="gridview-container">
-            <asp:GridView ID="gvOrders" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered">
+            <asp:GridView ID="gvTransactionDetails" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered">
                 <Columns>
-                    <asp:BoundField DataField="CustomerName" HeaderText="Customer Name" />
                     <asp:BoundField DataField="ProductName" HeaderText="Product Name" />
                     <asp:BoundField DataField="Quantity" HeaderText="Quantity" />
                     <asp:BoundField DataField="Price" HeaderText="Price" DataFormatString="Rp {0:N0}" />
                     <asp:BoundField DataField="Subtotal" HeaderText="Subtotal" DataFormatString="Rp {0:N0}" />
                 </Columns>
             </asp:GridView>
-        </div>
-
-        <div class="total-section">
-            <h3>Total: <asp:Label ID="lblTotal" runat="server" Text="Rp 0"></asp:Label></h3>
-            <asp:Button ID="btnCheckout" runat="server" Text="Checkout" CssClass="btn btn-primary" OnClick="btnCheckout_Click" />
         </div>
     </div>
 </asp:Content>

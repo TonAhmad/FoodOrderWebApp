@@ -11,34 +11,43 @@ namespace Project2._Cashier
 {
 
 
-    public partial class Dashboard
+    public partial class TransactionDetails
     {
 
         /// <summary>
-        /// gvOrders control.
+        /// lblTransactionID control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvOrders;
+        protected global::System.Web.UI.WebControls.Label lblTransactionID;
 
         /// <summary>
-        /// lblTotal control.
+        /// lblTransactionDate control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTotal;
+        protected global::System.Web.UI.WebControls.Label lblTransactionDate;
 
         /// <summary>
-        /// btnCheckout control.
+        /// lblTotalAmount control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCheckout;
+        protected global::System.Web.UI.WebControls.Label lblTotalAmount;
+
+        /// <summary>
+        /// gvTransactionDetails control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvTransactionDetails;
     }
 }

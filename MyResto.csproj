@@ -79,6 +79,7 @@
     <Content Include="_Admin\Reports.aspx" />
     <Content Include="_Cashier\DashboardC.aspx" />
     <Content Include="_Cashier\ProcessPayment.aspx" />
+    <Content Include="_Cashier\TransactionDetails.aspx" />
     <Content Include="_Cashier\TransactionHistory.aspx" />
     <Content Include="_Cust\Home.aspx" />
     <Content Include="_Cust\Menu.aspx" />
@@ -158,6 +159,13 @@
     </Compile>
     <Compile Include="_Cashier\ProcessPayment.aspx.designer.cs">
       <DependentUpon>ProcessPayment.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="_Cashier\TransactionDetails.aspx.cs">
+      <DependentUpon>TransactionDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="_Cashier\TransactionDetails.aspx.designer.cs">
+      <DependentUpon>TransactionDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="_Cashier\TransactionHistory.aspx.cs">
       <DependentUpon>TransactionHistory.aspx</DependentUpon>
