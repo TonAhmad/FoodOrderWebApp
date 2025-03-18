@@ -1,23 +1,6 @@
 ﻿<%@ Page Title="Cashier Dashboard" Language="C#" MasterPageFile="~/CashierMaster.Master" AutoEventWireup="true" CodeBehind="DashboardC.aspx.cs" Inherits="Project2._Cashier.Dashboard" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <style>
-        .cashier-container {
-            width: 80%;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        .gridview-container {
-            margin-top: 20px;
-        }
-        .total-section {
-            margin-top: 20px;
-            text-align: right;
-        }
-    </style>
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
