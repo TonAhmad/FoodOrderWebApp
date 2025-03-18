@@ -13,5 +13,11 @@ namespace Project2
         {
 
         }
+        protected void Logout_Click(object sender, EventArgs e)
+        {
+            Session.Clear();   // Hapus semua data session
+            Session.Abandon(); // Hapus session di server
+            Response.Redirect("~/Login.aspx"); // Redirect ke halaman login
+        }
     }
 }

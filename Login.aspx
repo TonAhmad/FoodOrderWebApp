@@ -24,6 +24,7 @@
             <div class="form-group">
                 <asp:Label ID="lblRole" runat="server" Text="Select Role:"></asp:Label>
                 <asp:DropDownList ID="ddlRole" runat="server" CssClass="form-control">
+                    <asp:ListItem Text=" " Value=" "></asp:ListItem>
                     <asp:ListItem Text="Admin" Value="Admin"></asp:ListItem>
                     <asp:ListItem Text="Cashier" Value="Cashier"></asp:ListItem>
                 </asp:DropDownList>
