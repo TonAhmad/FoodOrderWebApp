@@ -18,7 +18,7 @@ namespace Project2._Cashier
 
         private void LoadTransactionHistory()
         {
-            string connString = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+            string connString = ConfigurationManager.ConnectionStrings["Set"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
