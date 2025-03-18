@@ -1,8 +1,9 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/AdminMaster.Master" AutoEventWireup="true" CodeBehind="ManageProducts.aspx.cs" Inherits="Project2._Admin.ManageProducts" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
- <h1 class="text-center">Manage Products</h1>
+    <h1 class="text-center">Manage Products</h1>
 
     <!-- Alert -->
     <div id="alertMessage" runat="server" class="alert" role="alert" visible="false"></div>
@@ -78,6 +79,8 @@
             <div class="col-md-6">
                 <label class="form-label">Upload Image</label>
                 <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" />
+                <asp:TextBox ID="txtImagePath" runat="server" ReadOnly="true" Width="300px"></asp:TextBox>
+                <asp:Image ID="imgPreview" runat="server" Width="200px" Visible="false" />
             </div>
         </div>
 
@@ -104,7 +107,13 @@
                     <asp:BoundField DataField="categoryID" HeaderText="Category" ReadOnly="True" />
                     <asp:BoundField DataField="price" HeaderText="Price" ReadOnly="True" />
                     <asp:BoundField DataField="stock" HeaderText="Stock" ReadOnly="True" />
-                    <asp:BoundField DataField="imagePath" HeaderText="Image" ReadOnly="True" />
+                    <asp:TemplateField HeaderText="Image">
+                        <ItemTemplate>
+                            <asp:Image ID="imgProduct" runat="server"
+                                ImageUrl='<%# Eval("imagePath") %>'
+                                Width="80px" Height="80px" />
+                        </ItemTemplate>
+                    </asp:TemplateField>
                     <asp:CommandField ShowSelectButton="True" SelectText="Select" />
                 </Columns>
             </asp:GridView>

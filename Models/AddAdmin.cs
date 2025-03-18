@@ -90,7 +90,7 @@ namespace Project2.Models
             if (IsUserExists())
             {
                 return "Username atau email sudah terdaftar.";
-            }
+            }   
 
             string hashedPassword = HashPassword(password_hash);
             try
