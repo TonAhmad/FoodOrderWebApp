@@ -14,8 +14,8 @@ namespace Project2.Models
     public class AddAdmin
     {
         public string username, fullname, email, password_hash, phone_number, address, role;
-        private readonly SqlConnection con = new SqlConnection(Koneksi.connString);
-        private string flag;
+        readonly SqlConnection con = new SqlConnection(Koneksi.connString);
+        string flag;
         public DataSet ds = new DataSet();
 
         // Hash Password menggunakan SHA-256
