@@ -128,6 +128,8 @@ namespace Project2._Admin
             ddlCategory.SelectedIndex = 0;
             txtPrice.Text = "";
             txtStock.Text = "";
+            txtImagePath.Text = "";
+            imgPreview.Visible = false;
         }
 
         private void ShowAlert(string type, string message)
@@ -139,48 +141,68 @@ namespace Project2._Admin
 
         protected void btnAddProduct_Click(object sender, EventArgs e)
         {
+            // Validasi input
             if (string.IsNullOrWhiteSpace(txtProductName.Text) || ddlCategory.SelectedValue == "0" ||
-            string.IsNullOrWhiteSpace(txtPrice.Text) || string.IsNullOrWhiteSpace(txtStock.Text))
+                string.IsNullOrWhiteSpace(txtPrice.Text) || string.IsNullOrWhiteSpace(txtStock.Text))
             {
                 ShowAlert("danger", "All fields must be filled!");
                 return;
             }
 
-            // Buat objek product
-            Product product = new Product();
-
-            // Cek apakah user mengupload gambar
-            if (fileUpload.HasFile && fileUpload.FileBytes.Length > 0)
+            // Cek apakah file diunggah
+            if (!fileUpload.HasFile)
             {
-                string filename = Path.GetFileName(fileUpload.FileName);
-                string filepath = "ProductImages/" + filename; // Tidak pakai "~"
-                string serverPath = Server.MapPath("~/" + filepath); // Path fisik
-
-                // Simpan gambar ke folder proyek
-                fileUpload.SaveAs(serverPath);
-
-                product.imagePath = filepath; // Simpan hanya relative path
-            }
-            else
-            {
-                product.imagePath = "ProductImages/default.png"; // Pakai default jika kosong
+                ShowAlert("danger", "Please upload a product image!");
+                return;
             }
 
-            product.productName = txtProductName.Text;
-            product.categoryID = ddlCategory.SelectedValue;
-            product.price = Convert.ToDecimal(txtPrice.Text);
-            product.stock = Convert.ToInt32(txtStock.Text);
+            try
+            {
+                // Tentukan folder penyimpanan
+                string folderPath = Server.MapPath("~/ProductImages/");
 
-            string result = product.Create();
-            if (result == "success")
-            {
-                ShowAlert("success", "Product added successfully!");
-                ClearFields();
-                LoadProducts();
+                // Pastikan folder ada
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                // Buat nama file unik
+                string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + fileUpload.FileName;
+                string filePath = folderPath + fileName; // Path fisik
+                string dbPath = "/ProductImages/" + fileName; // Path untuk database
+
+                // Simpan file ke folder
+                fileUpload.SaveAs(filePath);
+
+                // Isi data produk
+                product.productName = txtProductName.Text;
+                product.categoryID = ddlCategory.SelectedValue;
+                product.price = Convert.ToDecimal(txtPrice.Text);
+                product.stock = Convert.ToInt32(txtStock.Text);
+                product.imagePath = dbPath; // Simpan path gambar
+
+                // Simpan ke database
+                string result = product.Create();
+                if (result == "success")
+                {
+                    ShowAlert("success", "Product added successfully!");
+                    ClearFields();
+                    LoadProducts();
+
+                    // Tampilkan preview gambar
+                    txtImagePath.Text = dbPath;
+                    imgPreview.ImageUrl = dbPath;
+                    imgPreview.Visible = true;
+                }
+                else
+                {
+                    ShowAlert("danger", result);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ShowAlert("danger", result);
+                ShowAlert("danger", "Error: " + ex.Message);
             }
         }
 
@@ -221,23 +243,21 @@ namespace Project2._Admin
 
         protected void btnDeleteProduct_Click(object sender, EventArgs e)
         {
-            Button btn = (Button)sender;
-            string productID = btn.CommandArgument;
-
-            if (string.IsNullOrWhiteSpace(productID))
+            if (string.IsNullOrWhiteSpace(txtProductID.Text))
             {
-                ShowAlert("danger", "Please select a product to delete!");
+                ShowAlert("danger", "Please select a category first!");
                 return;
             }
 
-            product.productID = productID;
+            product.productID = txtProductID.Text;
             string result = product.Delete();
 
             if (result == "success")
             {
                 ShowAlert("success", "Product deleted successfully!");
-                ClearFields();
                 LoadProducts();
+                ClearCat();
+                LoadCategories();
             }
             else
             {
