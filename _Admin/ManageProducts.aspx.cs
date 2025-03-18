@@ -42,6 +42,7 @@ namespace Project2._Admin
                 ShowAlert("success", "Category added successfully!");
                 ClearCat();
                 LoadCategories();
+                LoadDDCat();
             }
             else
             {
@@ -72,6 +73,7 @@ namespace Project2._Admin
                 ShowAlert("success", "Category updated successfully!");
                 ClearCat();
                 LoadCategories();
+                LoadDDCat();
             }
             else
             {
@@ -95,6 +97,7 @@ namespace Project2._Admin
                 ShowAlert("success", "Category deleted successfully!");
                 ClearCat();
                 LoadCategories();
+                LoadDDCat();
             }
             else
             {
@@ -189,6 +192,7 @@ namespace Project2._Admin
                     ShowAlert("success", "Product added successfully!");
                     ClearFields();
                     LoadProducts();
+                    LoadDDCat();
 
                     // Tampilkan preview gambar
                     txtImagePath.Text = dbPath;
@@ -234,6 +238,7 @@ namespace Project2._Admin
                 ShowAlert("success", "Product updated successfully!");
                 ClearFields();
                 LoadProducts();
+                LoadDDCat();
             }
             else
             {
@@ -258,6 +263,7 @@ namespace Project2._Admin
                 LoadProducts();
                 ClearCat();
                 LoadCategories();
+                LoadDDCat();
             }
             else
             {

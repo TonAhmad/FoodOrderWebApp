@@ -19,12 +19,15 @@
         <!-- Sidebar -->
         <nav class="sidebar bg-dark text-white p-3">
             <h2 class="text-center">Admin Panel</h2>
+            <div class="text-center mb-3">
+                <h5>👤 <asp:Label ID="lblUsername" runat="server" CssClass="text-warning"></asp:Label></h5>
+            </div>
             <ul class="nav flex-column">
                 <li class="nav-item"><a href="Dashboard.aspx" class="nav-link text-white">📊 Dashboard</a></li>
                 <li class="nav-item"><a href="ManageProducts.aspx" class="nav-link text-white">🍽 Kelola Produk</a></li>
                 <li class="nav-item"><a href="ManageCashiers.aspx" class="nav-link text-white">👨‍💼 Kelola Cashier</a></li>
                 <li class="nav-item"><a href="Reports.aspx" class="nav-link text-white">📜 Laporan</a></li>
-                <li class="nav-item"><a href="Logout.aspx" class="nav-link text-danger">🚪 Logout</a></li>
+                <li class="nav-item"><a href="../Logout.aspx" class="nav-link text-danger">🚪 Logout</a></li>
             </ul>
         </nav>
 
