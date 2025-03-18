@@ -69,6 +69,7 @@
   <ItemGroup>
     <Content Include="Design\AdminStyle.css" />
     <Content Include="Design\CashierStyle.css" />
+    <Content Include="Design\LoginStyle.css" />
     <Content Include="Design\Style.css" />
     <Content Include="Global.asax" />
     <Content Include="Login.aspx" />
