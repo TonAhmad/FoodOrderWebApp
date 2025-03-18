@@ -29,7 +29,7 @@ namespace Project2
             string password = txtPassword.Text.Trim();
 
             // Ambil connection string dari Web.config
-            string connString = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+            string connString = ConfigurationManager.ConnectionStrings["Set"].ConnectionString;
 
             using (SqlConnection conn = new SqlConnection(connString))
             {
