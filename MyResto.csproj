@@ -72,7 +72,7 @@
     <Content Include="Design\Style.css" />
     <Content Include="Global.asax" />
     <Content Include="Login.aspx" />
-    <Content Include="ProductImages\kasir.png" />
+    <Content Include="ProductImages\kasir.jpg" />
     <Content Include="TesKoneksi.aspx" />
     <Content Include="Web.config" />
     <Content Include="_Admin\Dashboard.aspx" />
