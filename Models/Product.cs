@@ -123,5 +123,32 @@ namespace Project2.Models
             }
             return flag;
         }
+
+        public DataSet Search(string keyword)
+        {
+            DataSet dsSearch = new DataSet();
+
+            try
+            {
+                con.Open();
+                string query = "SELECT * FROM item.Product WHERE productName LIKE @keyword OR categoryID LIKE @keyword";
+                using (SqlDataAdapter da = new SqlDataAdapter(query, con))
+                {
+                    da.SelectCommand.Parameters.AddWithValue("@keyword", "%" + keyword + "%");
+                    da.Fill(dsSearch, "Product");
+                }
+            }
+            catch (Exception ex)
+            {
+                flag = "Error: " + ex.Message;
+            }
+            finally
+            {
+                con.Close();
+            }
+
+            return dsSearch;
+        }
+
     }
 }
