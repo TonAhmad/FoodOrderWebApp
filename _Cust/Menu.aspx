@@ -22,9 +22,8 @@
                     <div class="row">
                         <asp:Repeater ID="rptProducts" runat="server">
                             <ItemTemplate>
-                                <%-- Tambahkan ID unik untuk kategori --%>
                                 <div id="cat<%# Eval("categoryID") %>" class="col-12 mb-3">
-                                    <div class="product-card">
+                                    <div class="product-card <%# Convert.ToInt32(Eval("stock")) == 0 ? "out-of-stock" : "" %>">
                                         <!-- Gambar Produk -->
                                         <div class="product-image">
                                             <img src='<%# Eval("imagePath") %>' alt="Product Image">
@@ -35,22 +34,35 @@
                                             <h5 class="card-title"><%# Eval("productName") %></h5>
                                             <p class="card-text"><strong>Category:</strong> <%# Eval("categoryName") %></p>
                                             <p class="card-text">Harga: <strong>Rp <%# Eval("price", "{0:N0}") %></strong></p>
-                                            <button class="btn btn-primary" onclick="addToCart('<%# Eval("productID") %>', '<%# Eval("productName") %>', <%# Eval("price") %>)">
+                                            <p class="card-text"><strong>Stok:</strong> <%# Eval("stock") %></p>
+
+                                            <button class="btn btn-primary add-to-cart"
+                                                onclick="addToCart('<%# Eval("productID") %>', '<%# Eval("productName") %>', <%# Eval("price") %>)"
+                                                <%# Convert.ToInt32(Eval("stock")) == 0 ? "disabled" : "" %>>
                                                 Tambah Produk
                                             </button>
                                         </div>
                                     </div>
                                 </div>
                             </ItemTemplate>
+
                         </asp:Repeater>
                     </div>
                 </div>
                 <!-- Bagian Kanan: Cart -->
-                <div class="cart-container">
-                    <h4>Keranjang Anda</h4>
-                    <div id="cartItems"></div>
-                    <p><strong>Total: Rp <span id="totalPrice">0</span></strong></p>
-                </div>
+                <form id="checkout" runat="server">
+                    <div class="cart-container">
+                        <h4>Keranjang Anda</h4>
+                        <div id="cartItems"></div>
+                        <p><strong>Total: Rp <span id="totalPrice">0</span></strong></p>
+                        <!-- Tombol Checkout -->
+                        <!-- Tombol Checkout -->
+                        <div class="text-center mt-3">
+                            <asp:Button ID="btnCheckout" runat="server" Text="Checkout" CssClass="btn btn-success" OnClientClick="saveCartAndRedirect(); return false;" />
+                        </div>
+
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -108,6 +120,30 @@
             }
             updateCart();
         }
+
+        function saveCartAndRedirect() {
+            let cartArray = Object.keys(cart).map(id => ({
+                productID: id,
+                name: cart[id].name,
+                price: cart[id].price,
+                quantity: cart[id].quantity
+            }));
+
+            localStorage.setItem("cart", JSON.stringify(cartArray));
+            window.location.href = "Checkout.aspx";
+
+            fetch("Checkout.aspx?saveCart=1", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(cartArray),
+            }).then(response => {
+                if (response.ok) {
+                    localStorage.removeItem("cart"); // Hapus cart dari localStorage setelah tersimpan di server
+                    window.location.href = "Checkout.aspx";
+                }
+            }).catch(error => console.error("Error:", error));
+        }
+
     </script>
 
 </asp:Content>

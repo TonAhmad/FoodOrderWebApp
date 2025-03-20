@@ -17,7 +17,6 @@ namespace Project2.Models
         public string imagePath;
 
         readonly SqlConnection con = new SqlConnection(Koneksi.connString);
-        string flag;
         public DataSet ds = new DataSet();
 
         public DataTable GetCategories()

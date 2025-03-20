@@ -22,14 +22,6 @@
                 <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" CssClass="form-control"></asp:TextBox>
             </div>
             <div class="form-group">
-                <asp:Label ID="lblRole" runat="server" Text="Select Role:"></asp:Label>
-                <asp:DropDownList ID="ddlRole" runat="server" CssClass="form-control">
-                    <asp:ListItem Text=" " Value=" "></asp:ListItem>
-                    <asp:ListItem Text="Admin" Value="Admin"></asp:ListItem>
-                    <asp:ListItem Text="Cashier" Value="Cashier"></asp:ListItem>
-                </asp:DropDownList>
-            </div>
-            <div class="form-group">
                 <asp:Button ID="btnLogin" runat="server" Text="Login" CssClass="btn btn-primary" OnClick="btnLogin_Click" />
             </div>
         </div>

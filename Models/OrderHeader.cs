@@ -10,8 +10,8 @@ namespace Project2.Models
     {
         public string orderID;
         public string customerName;
-        public string adminID = ""; // Default kosong, karena akan diisi oleh sesi cashier
-        public string orderStatus;
+        public string adminID = null; // Ubah default menjadi NULL
+        public string orderStatus; // Default pending
 
         readonly SqlConnection con = new SqlConnection(Koneksi.connString);
         string flag;
@@ -22,22 +22,9 @@ namespace Project2.Models
             {
                 con.Open();
 
-                // Validasi customerName tidak boleh kosong
                 if (string.IsNullOrEmpty(customerName))
                 {
                     return "Customer name cannot be empty!";
-                }
-
-                // Validasi orderStatus harus sesuai dengan yang diizinkan
-                if (orderStatus != "pending" && orderStatus != "confirmed" && orderStatus != "completed" && orderStatus != "canceled")
-                {
-                    return "Invalid order status!";
-                }
-
-                // Pastikan adminID tidak null, karena akan diisi oleh sesi cashier nanti
-                if (string.IsNullOrEmpty(adminID))
-                {
-                    adminID = ""; // Default kosong
                 }
 
                 string query = "INSERT INTO orders.OrderHeader (orderID, customerName, admin_id, orderStatus) " +
@@ -46,14 +33,14 @@ namespace Project2.Models
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@orderID", orderID);
                 cmd.Parameters.AddWithValue("@customerName", customerName);
-                cmd.Parameters.AddWithValue("@adminID", adminID); // Tidak boleh null, minimal string kosong
+                cmd.Parameters.AddWithValue("@adminID", (object)adminID ?? DBNull.Value);
                 cmd.Parameters.AddWithValue("@orderStatus", orderStatus);
 
                 flag = cmd.ExecuteNonQuery() > 0 ? "success" : "failed";
             }
             catch (Exception ex)
             {
-                flag = "Error: " + ex.Message;
+                flag = "Database Error: " + ex.Message;
             }
             finally
             {

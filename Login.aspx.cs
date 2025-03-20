@@ -37,7 +37,7 @@ namespace Project2
                 }
                 else if (userLogin.Role == "cashier")
                 {
-                    Response.Redirect("_Cashier/Home.aspx");
+                    Response.Redirect("_Cashier/ProcessPayment.aspx");
                 }
             }
             else

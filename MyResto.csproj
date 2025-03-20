@@ -44,6 +44,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -81,13 +84,13 @@
     <Content Include="_Admin\ManageCashiers.aspx" />
     <Content Include="_Admin\ManageProducts.aspx" />
     <Content Include="_Admin\Reports.aspx" />
-    <Content Include="_Cashier\DashboardC.aspx" />
     <Content Include="_Cashier\ProcessPayment.aspx" />
     <Content Include="_Cashier\TransactionDetails.aspx" />
     <Content Include="_Cashier\TransactionHistory.aspx" />
     <Content Include="_Cust\Checkout.aspx" />
     <Content Include="_Cust\Home.aspx" />
     <Content Include="_Cust\Menu.aspx" />
+    <Content Include="_Cust\SuccessOrder.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMaster.Master.cs">
@@ -123,13 +126,15 @@
     </Compile>
     <Compile Include="Models\AddAdmin.cs" />
     <Compile Include="Models\Category.cs" />
-    <Compile Include="Models\ImageUploader.cs" />
     <Compile Include="Models\Koneksi.cs" />
     <Compile Include="Models\LoginAdmin.cs" />
+    <Compile Include="Models\OrderCashier.cs" />
     <Compile Include="Models\OrderDetails.cs" />
     <Compile Include="Models\OrderHeader.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductMenu.cs" />
+    <Compile Include="Models\TransDetail.cs" />
+    <Compile Include="Models\TransHeader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServeMaster.Master.cs">
       <DependentUpon>ServeMaster.Master</DependentUpon>
@@ -173,13 +178,6 @@
     <Compile Include="_Admin\Reports.aspx.designer.cs">
       <DependentUpon>Reports.aspx</DependentUpon>
     </Compile>
-    <Compile Include="_Cashier\DashboardC.aspx.cs">
-      <DependentUpon>DashboardC.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="_Cashier\DashboardC.aspx.designer.cs">
-      <DependentUpon>DashboardC.aspx</DependentUpon>
-    </Compile>
     <Compile Include="_Cashier\ProcessPayment.aspx.cs">
       <DependentUpon>ProcessPayment.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -221,6 +219,13 @@
     </Compile>
     <Compile Include="_Cust\Menu.aspx.designer.cs">
       <DependentUpon>Menu.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="_Cust\SuccessOrder.aspx.cs">
+      <DependentUpon>SuccessOrder.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="_Cust\SuccessOrder.aspx.designer.cs">
+      <DependentUpon>SuccessOrder.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

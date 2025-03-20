@@ -227,7 +227,7 @@ namespace Project2._Admin
             if (fileUpload.HasFile)
             {
                 string filename = Path.GetFileName(fileUpload.FileName);
-                string filepath = "~/ProductImages/" + filename;
+                string filepath = "/ProductImages/" + filename;
                 fileUpload.SaveAs(Server.MapPath(filepath));
                 product.imagePath = filepath;
             }

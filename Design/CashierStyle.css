@@ -50,3 +50,32 @@
     margin-top: 20px;
     text-align: right;
 }
+
+/* PROCESS PAYMENT */
+.order-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .order-table th, .order-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .order-table th {
+        background-color: #f4f4f4;
+    }
+
+.btn-confirm {
+    background-color: #28a745;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+    .btn-confirm:hover {
+        background-color: #218838;
+    }

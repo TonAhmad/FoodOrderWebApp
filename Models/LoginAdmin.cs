@@ -15,6 +15,7 @@ namespace Project2.Models
         public string Password { get; set; }
         public string Role { get; private set; }
         public string Fullname { get; private set; }
+        public string AdminID { get; private set; } // Tambahkan adminID
 
         readonly string connStr = ConfigurationManager.ConnectionStrings["set"].ConnectionString;
 
@@ -28,7 +29,7 @@ namespace Project2.Models
                 try
                 {
                     con.Open();
-                    string query = "SELECT fullname, role, password_hash FROM adm.Admin WHERE username = @username";
+                    string query = "SELECT admin_id, fullname, role, password_hash FROM adm.Admin WHERE username = @username";
                     using (SqlCommand cmd = new SqlCommand(query, con))
                     {
                         cmd.Parameters.AddWithValue("@username", Username);
@@ -37,6 +38,7 @@ namespace Project2.Models
                         {
                             if (reader.Read())
                             {
+                                AdminID = reader["admin_id"].ToString(); // Ambil admin_id
                                 Fullname = reader["fullname"].ToString();
                                 Role = reader["role"].ToString();
                                 storedHash = reader["password_hash"].ToString();
@@ -54,6 +56,11 @@ namespace Project2.Models
             if (!string.IsNullOrEmpty(storedHash) && VerifyPassword(Password, storedHash))
             {
                 isAuthenticated = true;
+
+                // Simpan ke Session setelah login berhasil
+                HttpContext.Current.Session["admin_id"] = AdminID;
+                HttpContext.Current.Session["admin_name"] = Fullname;
+                HttpContext.Current.Session["admin_role"] = Role;
             }
 
             return isAuthenticated;

@@ -1,56 +1,131 @@
 ﻿using System;
+using System.Data.SqlClient;
+using System.Data;
+using System.Drawing;
 using System.Web.UI;
+using Project2.Models;
+using System.Web.UI.WebControls;
 
 namespace Project2._Cashier
 {
     public partial class ProcessPayment : System.Web.UI.Page
     {
+        OrderCashier orderCashier = new OrderCashier();
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                // Ambil total dari session atau database (sementara diset manual)
-                decimal totalAmount = 0;
-                if (Session["TotalAmount"] != null)
+                LoadPendingOrders();
+                LoadConfirmedOrders();
+            }
+        }
+
+        private void LoadPendingOrders()
+        {
+            DataTable dt = orderCashier.GetPendingOrders();
+            if (dt.Rows.Count > 0)
+            {
+                rptPendingOrders.DataSource = dt;
+                rptPendingOrders.DataBind();
+            }
+            else
+            {
+                rptPendingOrders.DataSource = null;
+                rptPendingOrders.DataBind();
+            }
+        }
+
+        protected void txtAmount_TextChanged(object sender, EventArgs e)
+        {
+            // Contoh perhitungan kembalian
+            decimal total = 0;
+            decimal amountPaid = 0;
+
+            if (!decimal.TryParse(txtAmount.Text, out amountPaid))
+            {
+                lblMessage.Text = "Invalid amount entered.";
+                lblMessage.CssClass = "error-message";
+                return;
+            }
+
+            // Misalnya total transaksi diambil dari session atau hidden field
+            if (Session["totalPayment"] != null)
+            {
+                total = Convert.ToDecimal(Session["totalPayment"]);
+            }
+
+            // Hitung kembalian
+            decimal change = amountPaid - total;
+            txtChange.Text = change >= 0 ? change.ToString("F2") : "0.00";
+        }
+
+
+        // Event handler untuk tombol "Confirm"
+        protected void btnConfirm_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            string orderID = btn.CommandArgument;
+
+            // Ambil admin_id dari Session
+            string adminID = Session["admin_id"] as string;
+
+            if (!string.IsNullOrEmpty(adminID))
+            {
+                bool success = orderCashier.ConfirmOrder(orderID, adminID);
+                if (success)
                 {
-                    decimal.TryParse(Session["TotalAmount"].ToString(), out totalAmount);
+                    lblMessage.Text = "Order " + orderID + " berhasil dikonfirmasi.";
+                    lblMessage.CssClass = "success-message";
+                    LoadPendingOrders(); // Refresh daftar pesanan
+                    LoadConfirmedOrders();
                 }
-                lblTotalAmount.Text = $"Rp {totalAmount:N0}";
-            }
-        }
-
-        protected void txtAmountPaid_TextChanged(object sender, EventArgs e)
-        {
-            decimal totalAmount = Session["TotalAmount"] != null ? (decimal)Session["TotalAmount"] : 0;
-            decimal amountPaid;
-
-            if (decimal.TryParse(txtAmountPaid.Text, out amountPaid))
-            {
-                decimal change = amountPaid - totalAmount;
-                lblChange.Text = change >= 0 ? $"Rp {change:N0}" : "Insufficient Payment";
+                else
+                {
+                    lblMessage.Text = "Gagal mengonfirmasi order.";
+                    lblMessage.CssClass = "error-message";
+                }
             }
             else
             {
-                lblChange.Text = "Invalid Amount";
+                lblMessage.Text = "Gagal mengonfirmasi order. Silakan login ulang.";
+                lblMessage.CssClass = "error-message";
             }
         }
 
-        protected void btnConfirmPayment_Click(object sender, EventArgs e)
+        protected void btnCompleteTransaction_Click(object sender, EventArgs e)
         {
-            decimal totalAmount = Session["TotalAmount"] != null ? (decimal)Session["TotalAmount"] : 0;
-            decimal amountPaid;
+            // Ambil adminID dari session
+            string adminID = Session["admin_id"]?.ToString() ?? "ADM001"; // Default jika session kosong
 
-            if (decimal.TryParse(txtAmountPaid.Text, out amountPaid) && amountPaid >= totalAmount)
+            using (SqlConnection con = new SqlConnection(Koneksi.connString))
             {
-                // Simpan transaksi ke database di sini
+                con.Open();
+                using (SqlTransaction transaction = con.BeginTransaction())
+                {
+                    try
+                    {
+                        OrderCashier orderCashier = new OrderCashier();
+                        string transID = orderCashier.GenerateTransactionID(con, transaction, adminID);
 
-                // Redirect ke halaman sukses
-                Response.Redirect("PaymentSuccess.aspx");
+                        // Lanjutkan proses transaksi...
+                        lblMessage.Text = "Transaction Completed! ID: " + transID;
+                        transaction.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        lblMessage.Text = "Error: " + ex.Message;
+                    }
+                }
             }
-            else
-            {
-                Response.Write("<script>alert('Insufficient payment!');</script>");
-            }
+        }
+
+
+        private void LoadConfirmedOrders()
+        {
+            DataTable dt = orderCashier.GetConfirmedOrders();
+            rptConfirmedOrders.DataSource = dt;
+            rptConfirmedOrders.DataBind();
         }
     }
 }

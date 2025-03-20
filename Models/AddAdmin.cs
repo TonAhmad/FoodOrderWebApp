@@ -224,7 +224,7 @@ namespace Project2.Models
                 }
                 dr.Close();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 dr = null;
             }
