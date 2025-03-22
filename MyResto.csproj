@@ -133,6 +133,7 @@
     <Compile Include="Models\OrderHeader.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductMenu.cs" />
+    <Compile Include="Models\ProductTopSeller.cs" />
     <Compile Include="Models\TransDetail.cs" />
     <Compile Include="Models\TransHeader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

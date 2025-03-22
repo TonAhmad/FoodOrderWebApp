@@ -55,15 +55,25 @@
     flex: 1;
 }
 
+.card-img-top {
+    width: 159px; /* Agar responsif */
+    height: 150px; /* Atur tinggi gambar agar selalu sama */
+    object-fit: cover; /* Memastikan gambar terisi penuh tanpa merubah aspek rasio */
+    border-radius: 8px; /* Opsional, untuk sudut sedikit membulat */
+}
+
+
 /* ISI HOME */
 .carousel img {
     height: 400px;
     object-fit: cover;
 }
 
-.card img {
-    height: 200px;
-    object-fit: cover;
+.card-img-top {
+    width: 10px; /* Agar responsif */
+    height: 200px; /* Atur tinggi gambar agar selalu sama */
+    object-fit: cover; /* Memastikan gambar terisi penuh tanpa merubah aspek rasio */
+    border-radius: 8px; /* Opsional, untuk sudut sedikit membulat */
 }
 
 .btn-warning {

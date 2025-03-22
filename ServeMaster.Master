@@ -30,7 +30,6 @@
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item"><a class="nav-link" href="Home.aspx">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="menu.aspx">Menu</a></li>
-                        <li class="nav-item"><a class="btn btn-warning" href="order.aspx">Order Sekarang</a></li>
                     </ul>
                 </div>
             </div>
