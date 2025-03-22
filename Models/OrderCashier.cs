@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Linq;
 using System.Web;
+using System.Web.Services.Description;
 
 namespace Project2.Models
 {
@@ -73,12 +74,10 @@ namespace Project2.Models
             {
                 con.Open();
                 string query = @"
-            SELECT oh.orderID, oh.customerName, p.productName, od.quantity, od.subtotal
-            FROM orders.OrderHeader oh
-            JOIN orders.OrderDetail od ON oh.orderID = od.orderID
-            JOIN item.Product p ON od.productID = p.productID
-            WHERE oh.orderStatus = 'confirmed'
-            ORDER BY oh.orderDate ASC";
+        SELECT oh.orderID, oh.customerName, oh.orderDate, oh.orderStatus
+        FROM orders.OrderHeader oh
+        WHERE oh.orderStatus = 'confirmed'
+        ORDER BY oh.orderDate ASC";
 
                 using (SqlDataAdapter da = new SqlDataAdapter(query, con))
                 {
@@ -96,104 +95,80 @@ namespace Project2.Models
             return dt;
         }
 
-        public bool ProcessTransaction(string orderID, string adminID)
+
+        public string ProcessTransaction(string orderID, string adminID, decimal totalAmount, DataTable orderDetails)
         {
-            using (SqlConnection con = new SqlConnection(Koneksi.connString))
+            string transID = GenerateTransID(adminID);
+            SqlTransaction transaction = null;
+
+            try
             {
                 con.Open();
-                SqlTransaction transaction = con.BeginTransaction(); // Gunakan transaksi SQL
+                transaction = con.BeginTransaction();
 
-                try
+                // 1️⃣ Insert ke TransHeader
+                string queryHeader = "INSERT INTO Transactions.TransHeader (transID, orderID, admin_ID, total) VALUES (@transID, @orderID, @adminID, @total)";
+                using (SqlCommand cmdHeader = new SqlCommand(queryHeader, con, transaction))
                 {
-                    // 1. Ambil total harga dari OrderHeader
-                    decimal total = 0;
-                    string queryTotal = "SELECT total FROM Orders.OrderHeader WHERE orderID = @orderID";
-                    using (SqlCommand cmd = new SqlCommand(queryTotal, con, transaction))
-                    {
-                        cmd.Parameters.AddWithValue("@orderID", orderID);
-                        total = (decimal)cmd.ExecuteScalar();
-                    }
-
-                    // 2. Buat transID baru
-                    string transID = GenerateTransactionID(con, transaction, adminID);
-
-
-
-                    // 3. Insert ke TransHeader
-                    string queryTransHeader = @"
-                INSERT INTO Transactions.TransHeader (transID, orderID, admin_ID, total) 
-                VALUES (@transID, @orderID, @adminID, @total)";
-                    using (SqlCommand cmd = new SqlCommand(queryTransHeader, con, transaction))
-                    {
-                        cmd.Parameters.AddWithValue("@transID", transID);
-                        cmd.Parameters.AddWithValue("@orderID", orderID);
-                        cmd.Parameters.AddWithValue("@adminID", adminID);
-                        cmd.Parameters.AddWithValue("@total", total);
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    // 4. Salin data dari OrderDetail ke TransDetail
-                    string queryTransDetail = @"
-                INSERT INTO Transactions.TransDetail (transID, productID, quantity, subtotal)
-                SELECT @transID, productID, quantity, subtotal 
-                FROM Orders.OrderDetail WHERE orderID = @orderID";
-                    using (SqlCommand cmd = new SqlCommand(queryTransDetail, con, transaction))
-                    {
-                        cmd.Parameters.AddWithValue("@transID", transID);
-                        cmd.Parameters.AddWithValue("@orderID", orderID);
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    // 5. Hapus data dari OrderHeader dan OrderDetail setelah diproses
-                    string deleteOrderDetail = "DELETE FROM Orders.OrderDetail WHERE orderID = @orderID";
-                    using (SqlCommand cmd = new SqlCommand(deleteOrderDetail, con, transaction))
-                    {
-                        cmd.Parameters.AddWithValue("@orderID", orderID);
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    string deleteOrderHeader = "DELETE FROM Orders.OrderHeader WHERE orderID = @orderID";
-                    using (SqlCommand cmd = new SqlCommand(deleteOrderHeader, con, transaction))
-                    {
-                        cmd.Parameters.AddWithValue("@orderID", orderID);
-                        cmd.ExecuteNonQuery();
-                    }
-
-                    transaction.Commit(); // Simpan transaksi ke database
-                    return true;
+                    cmdHeader.Parameters.AddWithValue("@transID", transID);
+                    cmdHeader.Parameters.AddWithValue("@orderID", orderID);
+                    cmdHeader.Parameters.AddWithValue("@adminID", adminID);
+                    cmdHeader.Parameters.AddWithValue("@total", totalAmount);
+                    cmdHeader.ExecuteNonQuery();
                 }
-                catch
+
+                // 2️⃣ Insert ke TransDetail (Looping dari `orderDetails`)
+                foreach (DataRow row in orderDetails.Rows)
                 {
-                    transaction.Rollback(); // Batalkan jika ada error
-                    return false;
+                    string queryDetail = "INSERT INTO Transactions.TransDetail (transID, productID, quantity, subtotal) VALUES (@transID, @productID, @quantity, @subtotal)";
+                    using (SqlCommand cmdDetail = new SqlCommand(queryDetail, con, transaction))
+                    {
+                        cmdDetail.Parameters.AddWithValue("@transID", transID);
+                        cmdDetail.Parameters.AddWithValue("@productID", row["productID"].ToString());
+                        cmdDetail.Parameters.AddWithValue("@quantity", Convert.ToInt32(row["quantity"]));
+                        cmdDetail.Parameters.AddWithValue("@subtotal", Convert.ToDecimal(row["subtotal"]));
+
+                        int rowsAffected = cmdDetail.ExecuteNonQuery();
+                        if (rowsAffected == 0)
+                        {
+                            throw new Exception("Insert ke TransDetail gagal.");
+                        }
+                    }
                 }
+
+                // 3️⃣ Update status pesanan menjadi "Completed"
+                string queryUpdate = "UPDATE Orders.OrderHeader SET orderStatus = 'Completed' WHERE orderID = @orderID";
+                using (SqlCommand cmdUpdate = new SqlCommand(queryUpdate, con, transaction))
+                {
+                    cmdUpdate.Parameters.AddWithValue("@orderID", orderID);
+                    cmdUpdate.ExecuteNonQuery();
+                }
+
+                // ✅ Semua sukses, commit transaksi
+                transaction.Commit();
+                return transID;
+            }
+            catch (Exception ex)
+            {
+                if (transaction != null)
+                {
+                    transaction.Rollback(); // ❌ Jika ada yang gagal, rollback semua
+                }
+                return "error: " + ex.Message; // Indikasi error agar bisa ditampilkan
+            }
+            finally
+            {
+                con.Close();
             }
         }
 
-        // Fungsi untuk membuat transID baru (format: TRX001, TRX002, dst.)
-        public string GenerateTransactionID(SqlConnection con, SqlTransaction transaction, string adminID)
+
+        public string GenerateTransID(string adminID)
         {
-            // Ambil 3 digit tengah dari adminID, contoh: ADM001 → M001
-            string adminPart = adminID.Length >= 5 ? adminID.Substring(1, 4) : adminID;
-
-            // Format waktu: TahunBulanTanggalJamMenit
-            string dateTimePart = DateTime.Now.ToString("yyyyMMddHHmm");
-
-            // Nomor random dari 10 - 150
             Random rnd = new Random();
-            int randomNumber = rnd.Next(10, 151);
-
-            // Query untuk mengecek jumlah transaksi
-            string query = "SELECT COUNT(*) FROM Transactions.TransHeader";
-            int count = 0;
-
-            using (SqlCommand cmd = new SqlCommand(query, con, transaction))
-            {
-                count = (int)cmd.ExecuteScalar() + 1;
-            }
-
-            // Gabungkan semuanya
-            return $"{adminPart}{dateTimePart}{randomNumber:D3}";
+            int randomNum = rnd.Next(10, 1000);
+            string timestamp = DateTime.Now.ToString("yyyyMMddHHmmss");
+            return $"{adminID}{timestamp}{randomNum}";
         }
     }
 }

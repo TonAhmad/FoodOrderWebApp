@@ -38,7 +38,11 @@ namespace Project2.Models
                     com.Parameters.AddWithValue("@orderID", OrderID);
                     com.Parameters.AddWithValue("@adminID", AdminID);
                     com.Parameters.AddWithValue("@total", Total);
-                    return com.ExecuteNonQuery() > 0 ? "success" : "failed";
+                    int rows = com.ExecuteNonQuery();
+                    if (rows > 0)
+                        return "success";
+                    else
+                        return "failed: no rows affected";
                 }
             }
             catch (Exception ex)

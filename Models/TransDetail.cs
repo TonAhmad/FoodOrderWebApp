@@ -36,7 +36,11 @@ namespace Project2.Models
                     com.Parameters.AddWithValue("@productID", ProductID);
                     com.Parameters.AddWithValue("@quantity", Quantity);
                     com.Parameters.AddWithValue("@subtotal", Subtotal);
-                    return com.ExecuteNonQuery() > 0 ? "success" : "failed";
+                    int rows = com.ExecuteNonQuery();
+                    if (rows > 0)
+                        return "success";
+                    else
+                        return "failed: no rows affected";
                 }
             }
             catch (Exception ex)

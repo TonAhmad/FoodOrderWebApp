@@ -17,6 +17,7 @@ namespace Project2._Cashier
             {
                 LoadPendingOrders();
                 LoadConfirmedOrders();
+                CalculateTotalAmount();
             }
         }
 
@@ -35,28 +36,27 @@ namespace Project2._Cashier
             }
         }
 
-        protected void txtAmount_TextChanged(object sender, EventArgs e)
+        private void CalculateTotalAmount()
         {
-            // Contoh perhitungan kembalian
-            decimal total = 0;
-            decimal amountPaid = 0;
+            decimal totalAmount = 0;
 
-            if (!decimal.TryParse(txtAmount.Text, out amountPaid))
+            foreach (RepeaterItem item in rptSelectedOrder.Items)
             {
-                lblMessage.Text = "Invalid amount entered.";
-                lblMessage.CssClass = "error-message";
-                return;
+                Label lblSubtotal = (Label)item.FindControl("lblSubtotal");
+
+                if (lblSubtotal != null && !string.IsNullOrEmpty(lblSubtotal.Text))
+                {
+                    // Hapus "Rp" dan konversi ke decimal
+                    string subtotalText = lblSubtotal.Text.Replace("Rp", "").Trim();
+                    totalAmount += Convert.ToDecimal(subtotalText);
+                }
             }
 
-            // Misalnya total transaksi diambil dari session atau hidden field
-            if (Session["totalPayment"] != null)
-            {
-                total = Convert.ToDecimal(Session["totalPayment"]);
-            }
+            // Tampilkan total di Label
+            lblTotalAmount.Text = "Rp " + totalAmount.ToString("N0");
 
-            // Hitung kembalian
-            decimal change = amountPaid - total;
-            txtChange.Text = change >= 0 ? change.ToString("F2") : "0.00";
+            // Simpan total di ViewState untuk digunakan di pembayaran
+            ViewState["TotalAmount"] = totalAmount;
         }
 
 
@@ -92,39 +92,141 @@ namespace Project2._Cashier
             }
         }
 
-        protected void btnCompleteTransaction_Click(object sender, EventArgs e)
+        protected void btnSelect_Click(object sender, EventArgs e)
         {
-            // Ambil adminID dari session
-            string adminID = Session["admin_id"]?.ToString() ?? "ADM001"; // Default jika session kosong
+            // Ambil orderID dari tombol yang diklik
+            Button btn = (Button)sender;
+            string orderID = btn.CommandArgument;
+
+            // Query untuk mendapatkan data pesanan berdasarkan orderID
+            string query = @"
+            SELECT oh.orderID, oh.customerName, p.productID, p.productName, od.quantity, (od.quantity * p.price) AS subtotal
+            FROM Orders.OrderDetail od
+            JOIN Orders.OrderHeader oh ON od.orderID = oh.orderID
+            JOIN item.Product p ON od.productID = p.productID
+            WHERE od.orderID = @orderID";
+
+
+
+            DataTable dt = new DataTable();
 
             using (SqlConnection con = new SqlConnection(Koneksi.connString))
             {
                 con.Open();
-                using (SqlTransaction transaction = con.BeginTransaction())
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    try
-                    {
-                        OrderCashier orderCashier = new OrderCashier();
-                        string transID = orderCashier.GenerateTransactionID(con, transaction, adminID);
-
-                        // Lanjutkan proses transaksi...
-                        lblMessage.Text = "Transaction Completed! ID: " + transID;
-                        transaction.Commit();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        lblMessage.Text = "Error: " + ex.Message;
-                    }
+                    cmd.Parameters.AddWithValue("@orderID", orderID);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
                 }
+            }
+
+            // Bind data ke Repeater untuk menampilkan di tabel "Selected Order Details"
+            rptSelectedOrder.DataSource = dt;
+            rptSelectedOrder.DataBind();
+
+            CalculateTotalAmount();
+        }
+
+
+
+        protected void btnPay_Click(object sender, EventArgs e)
+        {
+            decimal totalAmount = Convert.ToDecimal(ViewState["TotalAmount"]); // Ambil total dari ViewState
+            decimal amountPaid;
+
+            // Validasi input Amount Paid
+            if (string.IsNullOrWhiteSpace(txtAmount.Text) || !decimal.TryParse(txtAmount.Text, out amountPaid))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Masukkan nominal pembayaran!');", true);
+                return;
+            }
+
+            if (amountPaid < totalAmount)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Nominal kurang dari total yang harus dibayar!');", true);
+                return;
+            }
+
+            // Hitung kembalian jika lebih bayar
+            decimal change = amountPaid - totalAmount;
+            txtChange.Text = "Rp " + change.ToString("N0");
+
+            ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Nominal terpenuhi, lanjutkan transaksi!');", true);
+        }
+
+        protected void btnCompleteTransaction_Click(object sender, EventArgs e)
+        {
+            decimal totalAmount = Convert.ToDecimal(ViewState["TotalAmount"]);
+            decimal amountPaid;
+
+            if (string.IsNullOrWhiteSpace(txtAmount.Text) || !decimal.TryParse(txtAmount.Text, out amountPaid))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Masukkan nominal pembayaran!');", true);
+                return;
+            }
+
+            if (amountPaid < totalAmount)
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Nominal kurang dari total yang harus dibayar!');", true);
+                return;
+            }
+
+            // ✅ Ambil orderID dari repeater
+            string orderID = null;
+            if (rptSelectedOrder.Items.Count > 0)
+            {
+                Label lblOrderID = (Label)rptSelectedOrder.Items[0].FindControl("lblOrderID");
+                orderID = lblOrderID.Text;
+            }
+
+            if (string.IsNullOrEmpty(orderID))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Error: Order ID tidak ditemukan!');", true);
+                return;
+            }
+
+            string adminID = Session["admin_id"] as string;
+
+            // ✅ Siapkan DataTable untuk `orderDetails`
+            DataTable orderDetails = new DataTable();
+            orderDetails.Columns.Add("productID", typeof(string));
+            orderDetails.Columns.Add("quantity", typeof(int));
+            orderDetails.Columns.Add("subtotal", typeof(decimal));
+
+            foreach (RepeaterItem item in rptSelectedOrder.Items)
+            {
+                Label lblProductID = (Label)item.FindControl("lblProductID");
+                Label lblQuantity = (Label)item.FindControl("lblQuantity");
+                Label lblSubtotal = (Label)item.FindControl("lblSubtotal");
+
+                string productID = lblProductID.Text;
+                int quantity = Convert.ToInt32(lblQuantity.Text);
+                decimal subtotal = Convert.ToDecimal(lblSubtotal.Text.Replace("Rp ", "").Replace(",", ""));
+
+                orderDetails.Rows.Add(productID, quantity, subtotal);
+            }
+
+            // 🔥 Jalankan transaksi
+            string result = orderCashier.ProcessTransaction(orderID, adminID, totalAmount, orderDetails);
+
+            if (result.StartsWith("error"))
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Error: " + result + "');", true);
+            }
+            else
+            {
+                ScriptManager.RegisterStartupScript(this, GetType(), "alert", "alert('Transaksi berhasil!'); window.location='ProcessPayment.aspx';", true);
+                LoadPendingOrders();
+                LoadConfirmedOrders();
             }
         }
 
 
         private void LoadConfirmedOrders()
         {
-            DataTable dt = orderCashier.GetConfirmedOrders();
-            rptConfirmedOrders.DataSource = dt;
+            OrderCashier orderCashier = new OrderCashier();
+            rptConfirmedOrders.DataSource = orderCashier.GetConfirmedOrders();
             rptConfirmedOrders.DataBind();
         }
     }
