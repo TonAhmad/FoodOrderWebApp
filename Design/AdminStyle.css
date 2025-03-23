@@ -33,3 +33,25 @@ input, select, button {
     max-width: 300px;
 }
 
+/*Report*/
+.scrollable-grid {
+    max-height: 250px; /* Atur tinggi maksimal agar scroll muncul */
+    overflow-y: auto; /* Aktifkan scroll vertikal */
+    display: block; /* Paksa tabel agar mengikuti batas */
+    border: 1px solid #ddd; /* Opsional, untuk tampilan */
+}
+
+    .scrollable-grid table {
+        width: 100%; /* Pastikan tabel mengisi container */
+        table-layout: fixed; /* Hindari tabel melebihi batas */
+        border-collapse: collapse;
+    }
+
+    .scrollable-grid th, .scrollable-grid td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+
+

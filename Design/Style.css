@@ -70,8 +70,8 @@
 }
 
 .card-img-top {
-    width: 10px; /* Agar responsif */
-    height: 200px; /* Atur tinggi gambar agar selalu sama */
+    width: 150px; /* Agar responsif */
+    height: 150px; /* Atur tinggi gambar agar selalu sama */
     object-fit: cover; /* Memastikan gambar terisi penuh tanpa merubah aspek rasio */
     border-radius: 8px; /* Opsional, untuk sudut sedikit membulat */
 }
@@ -144,6 +144,7 @@
         border: none;
         cursor: not-allowed;
     }
+
 
 
 /* LAYOUT MENU & CART */

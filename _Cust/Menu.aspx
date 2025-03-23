@@ -44,6 +44,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </ItemTemplate>
 
                         </asp:Repeater>
@@ -55,7 +56,6 @@
                         <h4>Keranjang Anda</h4>
                         <div id="cartItems"></div>
                         <p><strong>Total: Rp <span id="totalPrice">0</span></strong></p>
-                        <!-- Tombol Checkout -->
                         <!-- Tombol Checkout -->
                         <div class="text-center mt-3">
                             <asp:Button ID="btnCheckout" runat="server" Text="Checkout" CssClass="btn btn-success" OnClientClick="saveCartAndRedirect(); return false;" />
@@ -71,17 +71,60 @@
         let cart = {};
 
         function addToCart(productID, productName, price) {
-            if (cart[productID]) {
-                cart[productID].quantity += 1;
-            } else {
-                cart[productID] = {
-                    name: productName,
-                    price: price,
-                    quantity: 1
-                };
-            }
-            updateCart();
+            console.log("Checking stock for product:", productID); // Debug log
+
+            $.ajax({
+                type: "POST",
+                url: "../ProductService.aspx/GetProductStock",
+                data: JSON.stringify({ productID: productID }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (response) {
+                    console.log("Stock received:", response.d); // Debug log
+                    let stock = response.d; // Pastikan ini adalah angka
+                    let currentQuantity = cart[productID] ? cart[productID].quantity : 0;
+
+                    if (stock > 0 && currentQuantity < stock) {
+                        // Jika produk sudah ada di cart, tambahkan jumlahnya
+                        if (cart[productID]) {
+                            cart[productID].quantity += 1;
+                        } else {
+                            cart[productID] = {
+                                name: productName,
+                                price: price,
+                                quantity: 1
+                            };
+                        }
+                        updateCart();
+                        console.log("Product added to cart:", cart);
+                    } else {
+                        alert("Stok tidak mencukupi!");
+
+                        // **Tambahan: Ubah tampilan jika stok sudah habis**
+                        updateProductStatus(productID, 0);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching stock:", xhr.responseText);
+                }
+            });
         }
+
+
+        function updateProductStatus(productID, stock) {
+            if (stock === 0) {
+                let productCard = document.querySelector(`#cat${productID} .product-card`);
+                let button = document.querySelector(`#cat${productID} .add-to-cart`);
+
+                if (productCard) productCard.classList.add("out-of-stock");
+                if (button) {
+                    button.disabled = true;
+                    button.style.backgroundColor = "#ccc";
+                    button.style.cursor = "not-allowed";
+                }
+            }
+        }
+
 
         function updateCart() {
             let cartContainer = document.getElementById("cartItems");
@@ -138,7 +181,7 @@
                 body: JSON.stringify(cartArray),
             }).then(response => {
                 if (response.ok) {
-                    localStorage.removeItem("cart"); // Hapus cart dari localStorage setelah tersimpan di server
+                    localStorage.removeItem("cart");
                     window.location.href = "Checkout.aspx";
                 }
             }).catch(error => console.error("Error:", error));

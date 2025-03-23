@@ -78,6 +78,7 @@
     <Content Include="Login.aspx" />
     <Content Include="Logout.aspx" />
     <Content Include="ProductImages\kasir.jpg" />
+    <Content Include="ProductService.aspx" />
     <Content Include="TesKoneksi.aspx" />
     <Content Include="Web.config" />
     <Content Include="_Admin\Dashboard.aspx" />
@@ -134,8 +135,16 @@
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\ProductMenu.cs" />
     <Compile Include="Models\ProductTopSeller.cs" />
+    <Compile Include="Models\Report.cs" />
     <Compile Include="Models\TransDetail.cs" />
     <Compile Include="Models\TransHeader.cs" />
+    <Compile Include="ProductService.aspx.cs">
+      <DependentUpon>ProductService.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ProductService.aspx.designer.cs">
+      <DependentUpon>ProductService.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServeMaster.Master.cs">
       <DependentUpon>ServeMaster.Master</DependentUpon>

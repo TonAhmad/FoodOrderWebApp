@@ -131,8 +131,8 @@ namespace Project2._Admin
             ddlCategory.SelectedIndex = 0;
             txtPrice.Text = "";
             txtStock.Text = "";
-            txtImagePath.Text = "";
             imgPreview.Visible = false;
+
         }
 
         private void ShowAlert(string type, string message)
@@ -171,9 +171,9 @@ namespace Project2._Admin
                 }
 
                 // Buat nama file unik
-                string fileName = DateTime.Now.ToString("yyyyMMddHHmmss") + "_" + fileUpload.FileName;
-                string filePath = folderPath + fileName; // Path fisik
-                string dbPath = "/ProductImages/" + fileName; // Path untuk database
+                string fileName = Path.GetFileName(fileUpload.FileName);
+                string filePath = folderPath + fileName; 
+                string dbPath = "/ProductImages/" + fileName; 
 
                 // Simpan file ke folder
                 fileUpload.SaveAs(filePath);
@@ -183,7 +183,7 @@ namespace Project2._Admin
                 product.categoryID = ddlCategory.SelectedValue;
                 product.price = Convert.ToDecimal(txtPrice.Text);
                 product.stock = Convert.ToInt32(txtStock.Text);
-                product.imagePath = dbPath; // Simpan path gambar
+                product.imagePath = dbPath; 
 
                 // Simpan ke database
                 string result = product.Create();
@@ -195,7 +195,6 @@ namespace Project2._Admin
                     LoadDDCat();
 
                     // Tampilkan preview gambar
-                    txtImagePath.Text = dbPath;
                     imgPreview.ImageUrl = dbPath;
                     imgPreview.Visible = true;
                 }
@@ -224,12 +223,17 @@ namespace Project2._Admin
             product.price = Convert.ToDecimal(txtPrice.Text);
             product.stock = Convert.ToInt32(txtStock.Text);
 
+            // Jika admin tidak upload gambar baru, gunakan gambar lama dari ViewState
             if (fileUpload.HasFile)
             {
                 string filename = Path.GetFileName(fileUpload.FileName);
                 string filepath = "/ProductImages/" + filename;
                 fileUpload.SaveAs(Server.MapPath(filepath));
                 product.imagePath = filepath;
+            }
+            else
+            {
+                product.imagePath = ViewState["CurrentImage"]?.ToString(); // Ambil gambar lama
             }
 
             string result = product.Update();
@@ -280,13 +284,13 @@ namespace Project2._Admin
         {
             try
             {
-                Category category = new Category(); // Buat objek Category
-                DataTable dt = category.GetCategories(); // Ambil data kategori
+                Category category = new Category(); 
+                DataTable dt = category.GetCategories(); 
 
                 // Bind data ke DropDownList
                 ddlCategory.DataSource = dt;
-                ddlCategory.DataTextField = "categoryName";  // Ditampilkan di dropdown
-                ddlCategory.DataValueField = "categoryID";  // Nilai yang tersimpan
+                ddlCategory.DataTextField = "categoryName";  
+                ddlCategory.DataValueField = "categoryID";  
                 ddlCategory.DataBind();
 
                 // Tambahkan opsi default
@@ -308,6 +312,17 @@ namespace Project2._Admin
             ddlCategory.SelectedValue = row.Cells[2].Text;
             txtPrice.Text = row.Cells[3].Text;
             txtStock.Text = row.Cells[4].Text;
+
+            // Ambil path gambar dari GridView
+            string imagePath = ((Image)row.FindControl("imgProduct")).ImageUrl;
+
+            // Set image preview jika ada gambar
+            if (!string.IsNullOrEmpty(imagePath))
+            {
+                imgPreview.ImageUrl = imagePath;
+                imgPreview.Visible = true;
+                ViewState["CurrentImage"] = imagePath; // Simpan gambar lama di ViewState
+            }
         }
     }
 }

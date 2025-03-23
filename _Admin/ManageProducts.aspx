@@ -79,7 +79,6 @@
             <div class="col-md-6">
                 <label class="form-label">Upload Image</label>
                 <asp:FileUpload ID="fileUpload" runat="server" CssClass="form-control" />
-                <asp:TextBox ID="txtImagePath" runat="server" ReadOnly="true" Width="300px"></asp:TextBox>
                 <asp:Image ID="imgPreview" runat="server" Width="200px" Visible="false" />
             </div>
         </div>

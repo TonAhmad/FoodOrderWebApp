@@ -21,11 +21,6 @@ namespace Project2._Cust
             }
         }
 
-        protected void btnSearch_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void LoadCategories()
         {
             ProductMenu productMenu = new ProductMenu();
