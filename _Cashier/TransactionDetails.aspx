@@ -24,14 +24,14 @@
         <h3>Total Amount: <asp:Label ID="lblTotalAmount" runat="server"></asp:Label></h3>
 
         <div class="gridview-container">
-            <asp:GridView ID="gvTransactionDetails" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered">
-                <Columns>
-                    <asp:BoundField DataField="ProductName" HeaderText="Product Name" />
-                    <asp:BoundField DataField="Quantity" HeaderText="Quantity" />
-                    <asp:BoundField DataField="Price" HeaderText="Price" DataFormatString="Rp {0:N0}" />
-                    <asp:BoundField DataField="Subtotal" HeaderText="Subtotal" DataFormatString="Rp {0:N0}" />
-                </Columns>
-            </asp:GridView>
+        <asp:GridView ID="gvTransactionDetails" runat="server" AutoGenerateColumns="False" CssClass="table table-bordered">
+            <Columns>
+                <asp:BoundField DataField="productName" HeaderText="Product Name" />
+                <asp:BoundField DataField="quantity" HeaderText="Quantity" />
+                <asp:BoundField DataField="unitPrice" HeaderText="Price" DataFormatString="Rp {0:N0}" />
+                <asp:BoundField DataField="subtotal" HeaderText="Subtotal" DataFormatString="Rp {0:N0}" />
+            </Columns>
+        </asp:GridView>
         </div>
     </div>
 </asp:Content>

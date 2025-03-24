@@ -11,13 +11,12 @@
     <link href="Design\Style.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <link rel="icon" type="image/png" sizes="64x64" href="/ProductImages/logo.png">
 </head>
 <body>
     <div class="wrapper">
         <header class="header">
             <div class="container d-flex justify-content-between align-items-center">
-                <img src="Images/logo.png" alt="Logo" class="logo">
                 <h1 class="site-title">Food Haven</h1>
             </div>
         </header>

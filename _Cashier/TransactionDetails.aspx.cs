@@ -11,50 +11,52 @@ namespace Project2._Cashier
         {
             if (!IsPostBack)
             {
-                if (Request.QueryString["TransactionID"] != null)
+                // Pastikan parameter orderID ada di URL
+                if (Request.QueryString["orderID"] != null)
                 {
-                    string transactionID = Request.QueryString["TransactionID"];
-                    LoadTransactionDetails(transactionID);
+                    string orderID = Request.QueryString["orderID"];
+                    lblTransactionID.Text = orderID; // Tampilkan ID transaksi di halaman
+                    LoadTransactionDetails(orderID);
                 }
                 else
                 {
-                    Response.Redirect("TransactionHistory.aspx");
+                    Response.Redirect("TransactionHistory.aspx"); // Jika tidak ada orderID, kembali ke history
                 }
             }
         }
 
-        private void LoadTransactionDetails(string transactionID)
+        private void LoadTransactionDetails(string orderID)
         {
             string connString = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
-
             using (SqlConnection conn = new SqlConnection(connString))
             {
-                // Ambil data transaksi utama
-                string queryTransaction = "SELECT TransactionID, TransactionDate, TotalAmount FROM Transactions WHERE TransactionID = @TransactionID";
-                SqlCommand cmdTransaction = new SqlCommand(queryTransaction, conn);
-                cmdTransaction.Parameters.AddWithValue("@TransactionID", transactionID);
-
                 conn.Open();
-                SqlDataReader reader = cmdTransaction.ExecuteReader();
-                if (reader.Read())
+
+                // Ambil detail transaksi utama dari OrderHeader
+                string headerQuery = "SELECT orderDate, (SELECT SUM(subtotal) FROM orders.OrderDetail WHERE orderID = @orderID) AS totalAmount FROM orders.OrderHeader WHERE orderID = @orderID";
+                using (SqlCommand cmd = new SqlCommand(headerQuery, conn))
                 {
-                    lblTransactionID.Text = reader["TransactionID"].ToString();
-                    lblTransactionDate.Text = Convert.ToDateTime(reader["TransactionDate"]).ToString("yyyy-MM-dd HH:mm:ss");
-                    lblTotalAmount.Text = $"Rp {Convert.ToDecimal(reader["TotalAmount"]):N0}";
+                    cmd.Parameters.AddWithValue("@orderID", orderID);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        lblTransactionDate.Text = Convert.ToDateTime(reader["orderDate"]).ToString("yyyy-MM-dd HH:mm:ss");
+                        lblTotalAmount.Text = "Rp " + Convert.ToDecimal(reader["totalAmount"]).ToString("N0");
+                    }
+                    reader.Close();
                 }
-                reader.Close();
 
-                // Ambil detail produk dalam transaksi
-                string queryDetails = "SELECT ProductName, Quantity, Price, (Quantity * Price) AS Subtotal FROM TransactionDetails WHERE TransactionID = @TransactionID";
-                SqlCommand cmdDetails = new SqlCommand(queryDetails, conn);
-                cmdDetails.Parameters.AddWithValue("@TransactionID", transactionID);
-                SqlDataAdapter da = new SqlDataAdapter(cmdDetails);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                conn.Close();
+                // Ambil detail item transaksi dari OrderDetail dengan JOIN ke Product
+                string detailQuery = @"SELECT p.productName, d.quantity, (d.subtotal / d.quantity) AS unitPrice, d.subtotal FROM orders.OrderDetail dJOIN item.Product p ON d.productID = p.productID WHERE d.orderID = @orderID";
 
-                gvTransactionDetails.DataSource = dt;
-                gvTransactionDetails.DataBind();
+                using (SqlDataAdapter da = new SqlDataAdapter(detailQuery, conn))
+                {
+                    da.SelectCommand.Parameters.AddWithValue("@orderID", orderID);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+                    gvTransactionDetails.DataSource = dt;
+                    gvTransactionDetails.DataBind();
+                }
             }
         }
     }
