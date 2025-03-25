@@ -23,7 +23,7 @@
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container">
-                <a class="navbar-brand" href="index.aspx">🍔 Food Haven</a>
+                <a class="navbar-brand" href="Home.aspx">🍔 Food Haven</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -43,35 +43,9 @@
 
 
         <footer>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4">
-                        <h3>Company</h3>
-                        <p>Company Name</p>
-                        <p>Address</p>
-                        <p>City, State, Zip</p>
-                    </div>
-                    <div class="col-md-4">
-                        <h3>Links</h3>
-                        <ul>
-                            <li><a href="#">Home</a></li>
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">Services</a></li>
-                            <li><a href="#">Contact</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-md-4">
-                        <h3>Follow Us</h3>
-                        <ul>
-                            <li><a href="#">Facebook</a></li>
-                            <li><a href="#">Twitter</a></li>
-                            <li><a href="#">Instagram</a></li>
-                            <li><a href="#">LinkedIn</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+            &copy; 2025 Food Haven. All Rights Reserved.
         </footer>
+
     </div>
 </body>
 </html>

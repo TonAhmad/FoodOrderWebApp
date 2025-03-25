@@ -15,24 +15,6 @@ namespace Project2._Cust
     {
 
         /// <summary>
-        /// rptCarouselIndicators control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptCarouselIndicators;
-
-        /// <summary>
-        /// rptCarousel control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Repeater rptCarousel;
-
-        /// <summary>
         /// RepeaterTopSeller control.
         /// </summary>
         /// <remarks>
@@ -40,5 +22,14 @@ namespace Project2._Cust
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater RepeaterTopSeller;
+
+        /// <summary>
+        /// rptScrollingImages control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptScrollingImages;
     }
 }

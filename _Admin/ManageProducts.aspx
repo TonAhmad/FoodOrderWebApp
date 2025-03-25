@@ -99,7 +99,7 @@
         <div class="table-responsive">
             <asp:GridView ID="gvProduct" runat="server" AutoGenerateColumns="False"
                 CssClass="table table-striped table-bordered text-center" GridLines="None"
-                OnSelectedIndexChanged="gvProduct_SelectedIndexChanged">
+                AllowPaging="True" PageSize="5" OnSelectedIndexChanged="gvProduct_SelectedIndexChanged">
                 <Columns>
                     <asp:BoundField DataField="productID" HeaderText="Product ID" ReadOnly="True" />
                     <asp:BoundField DataField="productName" HeaderText="Product Name" ReadOnly="True" />
@@ -116,6 +116,16 @@
                     <asp:CommandField ShowSelectButton="True" SelectText="Select" />
                 </Columns>
             </asp:GridView>
+
+            <!-- Navigasi Halaman -->
+            <div class="text-center mt-3">
+                <asp:Button ID="btnPrevPageProduct" runat="server" Text="Previous" CssClass="btn btn-secondary"
+                    OnClick="btnPrevPageProduct_Click" />
+                <asp:Label ID="lblPageNumberProduct" runat="server" CssClass="mx-3"></asp:Label>
+                <asp:Button ID="btnNextPageProduct" runat="server" Text="Next" CssClass="btn btn-secondary"
+                    OnClick="btnNextPageProduct_Click" />
+            </div>
+
         </div>
     </div>
 </asp:Content>

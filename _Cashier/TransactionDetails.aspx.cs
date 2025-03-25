@@ -27,13 +27,18 @@ namespace Project2._Cashier
 
         private void LoadTransactionDetails(string orderID)
         {
-            string connString = ConfigurationManager.ConnectionStrings["MyDB"].ConnectionString;
+            string connString = ConfigurationManager.ConnectionStrings["Set"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 conn.Open();
 
                 // Ambil detail transaksi utama dari OrderHeader
-                string headerQuery = "SELECT orderDate, (SELECT SUM(subtotal) FROM orders.OrderDetail WHERE orderID = @orderID) AS totalAmount FROM orders.OrderHeader WHERE orderID = @orderID";
+                string headerQuery = @"
+            SELECT orderDate, 
+                   (SELECT SUM(subtotal) FROM orders.OrderDetail WHERE orderID = @orderID) AS totalAmount 
+            FROM orders.OrderHeader 
+            WHERE orderID = @orderID";
+
                 using (SqlCommand cmd = new SqlCommand(headerQuery, conn))
                 {
                     cmd.Parameters.AddWithValue("@orderID", orderID);
@@ -47,7 +52,14 @@ namespace Project2._Cashier
                 }
 
                 // Ambil detail item transaksi dari OrderDetail dengan JOIN ke Product
-                string detailQuery = @"SELECT p.productName, d.quantity, (d.subtotal / d.quantity) AS unitPrice, d.subtotal FROM orders.OrderDetail dJOIN item.Product p ON d.productID = p.productID WHERE d.orderID = @orderID";
+                string detailQuery = @"
+            SELECT p.productName, 
+                   d.quantity, 
+                   (d.subtotal / NULLIF(d.quantity, 0)) AS unitPrice, 
+                   d.subtotal 
+            FROM orders.OrderDetail d 
+            JOIN item.Product p ON d.productID = p.productID 
+            WHERE d.orderID = @orderID";
 
                 using (SqlDataAdapter da = new SqlDataAdapter(detailQuery, conn))
                 {
@@ -59,5 +71,6 @@ namespace Project2._Cashier
                 }
             }
         }
+
     }
 }

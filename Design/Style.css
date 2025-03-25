@@ -55,32 +55,72 @@
     flex: 1;
 }
 
-.card-img-top {
-    width: 159px; /* Agar responsif */
-    height: 150px; /* Atur tinggi gambar agar selalu sama */
-    object-fit: cover; /* Memastikan gambar terisi penuh tanpa merubah aspek rasio */
-    border-radius: 8px; /* Opsional, untuk sudut sedikit membulat */
-}
-
-
-/* ISI HOME */
 .carousel img {
     height: 400px;
     object-fit: cover;
 }
 
+/* Styling card product */
+.card {
+    width: 200px;
+    border-radius: 10px;
+}
+
 .card-img-top {
-    width: 150px; /* Agar responsif */
-    height: 150px; /* Atur tinggi gambar agar selalu sama */
-    object-fit: cover; /* Memastikan gambar terisi penuh tanpa merubah aspek rasio */
-    border-radius: 8px; /* Opsional, untuk sudut sedikit membulat */
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.card-body {
+    padding: 15px;
 }
 
 .btn-warning {
     font-size: 18px;
     font-weight: bold;
     padding: 12px 24px;
+    border-radius: 8px;
 }
+
+.scrolling-container {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    background: #f8f9fa;
+    padding: 10px 0;
+}
+
+.scrolling-wrapper {
+    display: flex;
+    gap: 30px;
+    animation: marquee-scroll 19.38s linear infinite;
+}
+
+.scrolling-item {
+    flex: none;
+    margin-right: 20px; /* Jarak antar gambar */
+}
+
+.scrolling-image {
+    width: 150px; /* Sesuaikan ukuran */
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+/* Animasi looping */
+@keyframes marquee-scroll {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
 
 /* MENU */
 .category-btn {
@@ -107,7 +147,7 @@
 }
 
 .product-image img {
-    width: 150px; /* Ukuran gambar persegi */
+    width: 150px;
     height: 150px;
     object-fit: cover;
     border-radius: 5px;
@@ -225,3 +265,4 @@ footer {
     text-align: center;
     padding: 10px;
 }
+

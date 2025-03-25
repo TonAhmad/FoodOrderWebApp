@@ -18,8 +18,8 @@
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="details-container">
-        <h1>Transaction Details</h1>
-        <h3>Transaction ID: <asp:Label ID="lblTransactionID" runat="server"></asp:Label></h3>
+        <h1>Order Details</h1>
+        <h3>Order ID: <asp:Label ID="lblTransactionID" runat="server"></asp:Label></h3>
         <h3>Date: <asp:Label ID="lblTransactionDate" runat="server"></asp:Label></h3>
         <h3>Total Amount: <asp:Label ID="lblTotalAmount" runat="server"></asp:Label></h3>
 

@@ -29,7 +29,6 @@
             <ul class="nav flex-column">
                 <li class="nav-item"><a href="ProcessPayment.aspx" class="nav-link text-white">💳 Proses Pembayaran</a></li>
                 <li class="nav-item"><a href="TransactionDetails.aspx" class="nav-link text-white">🛍️ Detail Order</a></li>
-                <li class="nav-item"><a href="TransactionHistory.aspx" class="nav-link text-white">📜 Riwayat Order</a></li>
                 <li class="nav-item"><a href="../Logout.aspx" class="nav-link text-danger">🚪 Logout</a></li>
             </ul>
         </nav>

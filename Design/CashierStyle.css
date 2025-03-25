@@ -80,6 +80,39 @@
         background-color: #218838;
     }
 
+
+.payment-section {
+    max-width: 350px;
+    margin: auto;
+    display:flex;
+    align-items:flex-start;
+}
+
+/* Label */
+label {
+    font-weight: 600;
+}
+
+/* Input Box */
+.form-control {
+    font-size: 14px;
+    padding: 8px;
+}
+
+/* Buttons */
+.btn {
+    font-size: 14px;
+    padding: 8px 16px;
+}
+
+
+/* Button */
+.btn {
+    font-size: 16px;
+    padding: 10px 20px;
+}
+
+
 /*Riwayat Order */
 .history-container {
     max-width: 900px;

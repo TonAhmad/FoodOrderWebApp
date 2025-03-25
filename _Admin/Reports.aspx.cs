@@ -20,19 +20,90 @@ namespace Project2._Admin
             LoadTotalEarnings();
         }
 
-        private void LoadTransactionReport()
+        private void LoadTransactionReport(string searchQuery = "")
         {
-            DataTable dt = reportModel.GetTransactionReports();
+            DataTable dt = reportModel.GetTransactionReports(); // Ambil semua data transaksi
+
+            // Jika ada query pencarian, filter data berdasarkan transID atau orderID
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                DataView dv = new DataView(dt);
+                dv.RowFilter = $"transID LIKE '%{searchQuery}%' OR orderID LIKE '%{searchQuery}%'";
+                dt = dv.ToTable();
+            }
+
+            // Format kolom "total"
+            foreach (DataRow row in dt.Rows)
+            {
+                row["total"] = Convert.ToDecimal(row["total"]).ToString("N0"); // Format tanpa angka desimal
+            }
+
             gvTransactions.DataSource = dt;
             gvTransactions.DataBind();
+
+            // Update halaman label paging
+            lblPageNumber.Text = $"Page {gvTransactions.PageIndex + 1} of {gvTransactions.PageCount}";
+
+            // Nonaktifkan tombol jika di awal/akhir halaman
+            btnPrevPage.Enabled = gvTransactions.PageIndex > 0;
+            btnNextPage.Enabled = gvTransactions.PageIndex < gvTransactions.PageCount - 1;
         }
+
+        // Event Paging GridView
+        protected void gvTransactions_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvTransactions.PageIndex = e.NewPageIndex;
+            LoadTransactionReport(txtSearch.Text); // Load ulang dengan search query jika ada
+        }
+
+        // Event Search Button
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            LoadTransactionReport(txtSearch.Text);
+        }
+
+        // Event Reset Button
+        protected void btnReset_Click(object sender, EventArgs e)
+        {
+            txtSearch.Text = "";
+            LoadTransactionReport(); // Kembali ke data awal tanpa filter
+        }
+
+        // Event untuk tombol Previous Page
+        protected void btnPrevPage_Click(object sender, EventArgs e)
+        {
+            if (gvTransactions.PageIndex > 0)
+            {
+                gvTransactions.PageIndex--;
+                LoadTransactionReport(txtSearch.Text);
+            }
+        }
+
+        // Event untuk tombol Next Page
+        protected void btnNextPage_Click(object sender, EventArgs e)
+        {
+            if (gvTransactions.PageIndex < gvTransactions.PageCount - 1)
+            {
+                gvTransactions.PageIndex++;
+                LoadTransactionReport(txtSearch.Text);
+            }
+        }
+
 
         private void LoadSalesReport()
         {
             DataTable dt = reportModel.GetSalesReport("month", DateTime.Now.Month);
+
+            // Format kolom "subtotal" sebelum di-bind ke GridView
+            foreach (DataRow row in dt.Rows)
+            {
+                row["TotalEarnings"] = Convert.ToDecimal(row["TotalEarnings"]).ToString("N0"); // Format tanpa angka di belakang koma
+            }
+
             gvSales.DataSource = dt;
             gvSales.DataBind();
         }
+
 
         private void LoadTotalEarnings()
         {

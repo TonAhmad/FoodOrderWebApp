@@ -172,8 +172,8 @@ namespace Project2._Admin
 
                 // Buat nama file unik
                 string fileName = Path.GetFileName(fileUpload.FileName);
-                string filePath = folderPath + fileName; 
-                string dbPath = "/ProductImages/" + fileName; 
+                string filePath = folderPath + fileName;
+                string dbPath = "/ProductImages/" + fileName;
 
                 // Simpan file ke folder
                 fileUpload.SaveAs(filePath);
@@ -183,7 +183,7 @@ namespace Project2._Admin
                 product.categoryID = ddlCategory.SelectedValue;
                 product.price = Convert.ToDecimal(txtPrice.Text);
                 product.stock = Convert.ToInt32(txtStock.Text);
-                product.imagePath = dbPath; 
+                product.imagePath = dbPath;
 
                 // Simpan ke database
                 string result = product.Create();
@@ -233,7 +233,7 @@ namespace Project2._Admin
             }
             else
             {
-                product.imagePath = ViewState["CurrentImage"]?.ToString(); // Ambil gambar lama
+                product.imagePath = ViewState["CurrentImage"]?.ToString();
             }
 
             string result = product.Update();
@@ -277,20 +277,55 @@ namespace Project2._Admin
 
         private void LoadProducts()
         {
-            gvProduct.DataSource = product.Read();
+            gvProduct.DataSource = product.Read(); // Ambil data dari model `product`
             gvProduct.DataBind();
+
+            // Update Label Halaman
+            lblPageNumberProduct.Text = $"Page {gvProduct.PageIndex + 1} of {gvProduct.PageCount}";
+
+            // Nonaktifkan tombol jika sudah di awal/akhir
+            btnPrevPageProduct.Enabled = gvProduct.PageIndex > 0;
+            btnNextPageProduct.Enabled = gvProduct.PageIndex < gvProduct.PageCount - 1;
         }
+
+        // Event untuk GridView paging
+        protected void gvProduct_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvProduct.PageIndex = e.NewPageIndex;
+            LoadProducts();
+        }
+
+        // Event untuk tombol Previous Page
+        protected void btnPrevPageProduct_Click(object sender, EventArgs e)
+        {
+            if (gvProduct.PageIndex > 0)
+            {
+                gvProduct.PageIndex--;
+                LoadProducts();
+            }
+        }
+
+        // Event untuk tombol Next Page
+        protected void btnNextPageProduct_Click(object sender, EventArgs e)
+        {
+            if (gvProduct.PageIndex < gvProduct.PageCount - 1)
+            {
+                gvProduct.PageIndex++;
+                LoadProducts();
+            }
+        }
+
         private void LoadDDCat()
         {
             try
             {
-                Category category = new Category(); 
-                DataTable dt = category.GetCategories(); 
+                Category category = new Category();
+                DataTable dt = category.GetCategories();
 
                 // Bind data ke DropDownList
                 ddlCategory.DataSource = dt;
-                ddlCategory.DataTextField = "categoryName";  
-                ddlCategory.DataValueField = "categoryID";  
+                ddlCategory.DataTextField = "categoryName";
+                ddlCategory.DataValueField = "categoryID";
                 ddlCategory.DataBind();
 
                 // Tambahkan opsi default

@@ -3,41 +3,24 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
-   <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-        <asp:Repeater ID="rptCarouselIndicators" runat="server">
-            <ItemTemplate>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="<%# Container.ItemIndex %>" 
-                        class='<%# Container.ItemIndex == 0 ? "active" : "" %>'></button>
-            </ItemTemplate>
-        </asp:Repeater>
-    </div>
-    <div class="carousel-inner">
-        <asp:Repeater ID="rptCarousel" runat="server">
-            <ItemTemplate>
-                <div class='carousel-item <%# Container.ItemIndex == 0 ? "active" : "" %>'>
-                    <img src='<%# Eval("ImagePath") %>' class="d-block w-100" alt='<%# Eval("ProductName") %>'>
-                </div>
-            </ItemTemplate>
-        </asp:Repeater>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-    </button>
-</div>
 
+    <!-- Section Welcome -->
+    <section class="container mt-5 text-center">
+        <h2>Selamat Datang di Restoran Kami</h2>
+        <p class="lead">Nikmati kelezatan makanan terbaik kami, dibuat dengan bahan berkualitas tinggi dan cita rasa yang tak terlupakan.</p>
+    </section>
+
+    <!-- Top Seller -->
     <section class="container mt-5">
-        <h2 class="text-center mb-4">Top Seller</h2>
-        <div class="row">
+        <h2 class="text-center mb-4">🔥 Menu Favorit Pilihan Pelanggan 🔥</h2>
+        <p class="text-center text-muted">Cek beberapa menu terlaris yang paling banyak dipesan oleh pelanggan setia kami!</p>
+        <div class="row justify-content-center">
             <asp:Repeater ID="RepeaterTopSeller" runat="server">
                 <ItemTemplate>
-                    <div class="col-md-4">
-                        <div class="card">
-                            <img src='<%# Eval("ImagePath") %>' class="card-img-top" alt='<%# Eval("ProductName") %>'>
-                            <div class="card-body text-center">
+                    <div class="col-md-4 d-flex justify-content-center">
+                        <div class="card text-center shadow-sm">
+                            <img src='<%# Eval("ImagePath") %>' class="card-img-top mx-auto mt-3" alt='<%# Eval("ProductName") %>'>
+                            <div class="card-body">
                                 <h5 class="card-title"><%# Eval("ProductName") %></h5>
                             </div>
                         </div>
@@ -47,10 +30,27 @@
         </div>
     </section>
 
+        <!-- Image Slider (Auto-Scrolling) -->
+    <div class="scrolling-container mt-3">
+        <div class="scrolling-wrapper">
+            <asp:Repeater ID="rptScrollingImages" runat="server">
+                <ItemTemplate>
+                    <div class="scrolling-item">
+                        <img src='<%# Eval("ImagePath") %>' alt='<%# Eval("ProductName") %>' class="scrolling-image">
+                    </div>
+                </ItemTemplate>
+            </asp:Repeater>
+        </div>
+    </div>
+
+    <!-- Order Section -->
     <section class="text-center mt-5">
-        <h2>Pesan Sekarang</h2>
-        <p>Rasakan makanan lezat kami, cukup pesan dari web ini!</p>
-        <a href="Menu.aspx" class="btn btn-warning btn-lg">Order Sekarang</a>
+        <h2>🍽️ Pesan Sekarang, Nikmati Kelezatannya! 🍽️</h2>
+        <p class="mb-4">Tak perlu antri! Pesan makanan favoritmu langsung dari web ini dan nikmati setiap gigitan lezatnya.</p>
+        <a href="Menu.aspx" class="btn btn-warning btn-lg mt-3">Order Sekarang</a>
     </section>
+
 </asp:Content>
+
+
 

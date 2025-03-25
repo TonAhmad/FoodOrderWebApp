@@ -13,13 +13,13 @@ namespace Project2._Cust
 {
     public partial class Home : System.Web.UI.Page
     {
-        readonly SqlConnection con = new SqlConnection(Koneksi.connString); 
+        readonly SqlConnection con = new SqlConnection(Koneksi.connString);
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
                 LoadTopSeller();
-                LoadCarousel();
+                LoadScrollingImages();
             }
         }
 
@@ -53,7 +53,7 @@ namespace Project2._Cust
             }
         }
 
-        private void LoadCarousel()
+        private void LoadScrollingImages()
         {
             string query = "SELECT productName, imagePath FROM item.Product";
             SqlDataAdapter da = new SqlDataAdapter(query, con);
@@ -62,12 +62,10 @@ namespace Project2._Cust
 
             if (dt.Rows.Count > 0)
             {
-                rptCarousel.DataSource = dt;
-                rptCarousel.DataBind();
-
-                rptCarouselIndicators.DataSource = dt;
-                rptCarouselIndicators.DataBind();
+                rptScrollingImages.DataSource = dt;
+                rptScrollingImages.DataBind();
             }
         }
+
     }
 }
