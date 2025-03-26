@@ -84,8 +84,6 @@
 .payment-section {
     max-width: 350px;
     margin: auto;
-    display:flex;
-    align-items:flex-start;
 }
 
 /* Label */
