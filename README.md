@@ -29,22 +29,23 @@ An ASP.NET-based Food Ordering Management System that supports three user roles:
 Here are some preview images of the application:
 
 ### 🏠 Customer – Homepage
-![Customer Homepage](screenshots/customer-homepage.png)
+<img src="screenshots/customer-homepage.png" alt="Customer Homepage" width="800" style="border: 1px solid #ccc;" />
 
 ### 🍔 Customer – Product View
-![Customer Product View](screenshots/customer-products.png)
+<img src="screenshots/customer-products.png" alt="Customer Product View" width="800" style="border: 1px solid #ccc;" />
 
 ### 📅 Cashier – Manage Incoming Orders
-![Cashier Order Management](screenshots/cashier-orders.png)
+<img src="screenshots/cashier-orders.png" alt="Cashier Order Management" width="800" style="border: 1px solid #ccc;" />
 
 ### 📊 Cashier – Order History
-![Cashier Order History](screenshots/cashier-history.png)
+<img src="screenshots/cashier-history.png" alt="Cashier Order History" width="800" style="border: 1px solid #ccc;" />
 
 ### 🛒 Admin – Manage Products
-![Admin Manage Products](screenshots/admin-products.png)
+<img src="screenshots/admin-products.png" alt="Admin Manage Products" width="800" style="border: 1px solid #ccc;" />
 
 ### 📈 Admin – View Transaction Reports
-![Admin Transaction Reports](screenshots/admin-reports.png)
+<img src="screenshots/admin-reports.png" alt="Admin Transaction Reports" width="800" style="border: 1px solid #ccc;" />
+
 
 ---
 
